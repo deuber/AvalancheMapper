@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Information</title>
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+        .form-container {
+            margin: 20px;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Location Information</h1>
+        <p>
+            If you have enabled location on your phone, paste the coordinates found from your phone's metadata where you took the picture of the avalanche. 
+            OR you can manually enter the coordinates or use the map below to pick a location.
+        </p>
+        <p>
+            The coordinates can be entered in one of the following formats:
+        </p>
+        <ul>
+            <li><b>Degrees, Minutes, Seconds (DMS):</b> For example, <code>39°08'24.9"N 120°14'06.0"W</code></li>
+            <li><b>Decimal Degrees:</b> For example, <code>39.166175, -120.155778</code></li>
+        </ul>
+        <p>Both formats are supported, and the map will update accordingly.</p>
+        <form>
+            <label for="coordinates">Coordinates:</label>
+            <input type="text" id="coordinates" name="coordinates" placeholder='e.g., "39°08\'24.9\"N 120°14\'06.0\"W" or "39.166175, -120.155778"'>
+            <button type="button" id="update-marker">Update Marker</button>
+            <p>You can manually enter the coordinates or use the map below to pick a location.</p>
+            <div id="map"></div>
+        </form>
+    </div>
+
+    <script>
+        let map;
+        let marker;
+
+        async function initMap() {
+            // Fetch the API key
+            const response = await fetch('/api-key');
+            const data = await response.json();
+            const googleMapsApiKey = data.apiKey;
+
+            // Dynamically load Google Maps script
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&callback=loadMap`;
+            script.async = true;
+            document.head.appendChild(script);
+        }
+
+        function loadMap() {
+            // Center the map at Tahoe City, CA
+            const tahoeCity = { lat: 39.1707, lng: -120.1405 };
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: tahoeCity,
+                zoom: 10
+            });
+
+            // Add a draggable marker
+            marker = new google.maps.Marker({
+                position: tahoeCity,
+                map: map,
+                draggable: true,
+                title: "Drag me to select a location"
+            });
+
+            // Update coordinates input field on marker drag
+            marker.addListener('dragend', () => {
+                const position = marker.getPosition();
+                document.getElementById('coordinates').value =
+                    `${position.lat().toFixed(6)}, ${position.lng().toFixed(6)}`;
+            });
+
+            // Handle manual coordinates input
+            document.getElementById('update-marker').addEventListener('click', () => {
+                const input = document.getElementById('coordinates').value.trim();
+
+                if (input) {
+                    try {
+                        const { lat, lng } = parseCoordinates(input);
+
+                        const newLatLng = { lat: lat, lng: lng };
+
+                        // Update marker position
+                        marker.setPosition(newLatLng);
+
+                        // Center map on new coordinates
+                        map.setCenter(newLatLng);
+                    } catch (error) {
+                        alert("Invalid coordinates format. Please use '39.166175, -120.155778' or '39°08'24.9\"N 120°14'06.0\"W'.");
+                    }
+                }
+            });
+        }
+
+        function parseCoordinates(input) {
+            // Match DMS format: 39°08'24.9"N 120°14'06.0"W
+            const dmsRegex = /(\d+)[°](\d+)'(\d+(?:\.\d+)?)["]?([N|S])?\s*(\d+)[°](\d+)'(\d+(?:\.\d+)?)["]?([E|W])?/i;
+
+            if (dmsRegex.test(input)) {
+                const matches = input.match(dmsRegex);
+
+                const latDegrees = parseFloat(matches[1]);
+                const latMinutes = parseFloat(matches[2]);
+                const latSeconds = parseFloat(matches[3]);
+                const latDirection = matches[4];
+
+                const lngDegrees = parseFloat(matches[5]);
+                const lngMinutes = parseFloat(matches[6]);
+                const lngSeconds = parseFloat(matches[7]);
+                const lngDirection = matches[8];
+
+                const lat = (latDegrees + latMinutes / 60 + latSeconds / 3600) * (latDirection === "S" ? -1 : 1);
+                const lng = (lngDegrees + lngMinutes / 60 + lngSeconds / 3600) * (lngDirection === "W" ? -1 : 1);
+
+                return { lat, lng };
+            }
+
+            // Match Decimal Degrees format: 39.166175, -120.155778
+            const decimalRegex = /^([-+]?[0-9]*\.?[0-9]+),\s*([-+]?[0-9]*\.?[0-9]+)$/;
+
+            if (decimalRegex.test(input)) {
+                const matches = input.match(decimalRegex);
+
+                const lat = parseFloat(matches[1]);
+                const lng = parseFloat(matches[2]);
+
+                return { lat, lng };
+            }
+
+            throw new Error("Invalid coordinate format");
+        }
+
+        // Initialize the map
+        initMap();
+    </script>
+</body>
+</html>
