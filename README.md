@@ -29,19 +29,23 @@ Make sure you have the following installed on your system:
 
 1. **Clone the Repository**:
    git clone https://github.com/deuber/AvalancheMapper.git
+   
    cd AvalancheMapper
    npm install
 
 2. **Create .env file**:
    Create the .env File: In the root of the project directory, create a file named .env and add the following content:
+   
    GOOGLE_API_MAPS_KEY=your-google-maps-api-key
+   
    Replace your-google-maps-api-key with your actual Google Maps API key. You can get your key from the Google Cloud Console
 
 3. **Start the Server**:
   node server.js
 
 4. **Access the Application**:
-Access the Application: Open your browser and navigate to:
+
+  Access the Application: Open your browser and navigate to:
 
 http://localhost:3000
 
