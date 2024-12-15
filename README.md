@@ -6,15 +6,16 @@ AvalancheMapper is a simple and efficient tool designed to help backcountry skie
 
 As an avid backcountry skier, I often contribute avalanche observations to organizations like the Sierra Avalanche Center and Utah Avalanche Center. I noticed that manually entering avalanche locations can be error-prone. However, I realized I could extract accurate location coordinates directly from my phone's metadata for the image taken of the avalanche site. This inspired me to create AvalancheMapper, which ensures that location data submitted is both precise and easy to input.
 
-Currently, platforms like:
+Currently, platforms below do not provide a way for users to input only coordinates. 
 - [Sierra Avalanche Center](https://www.sierraavalanchecenter.org/observations#/view/observations)
 - [Utah Avalanche Center](https://utahavalanchecenter.org/node/add/avalanche)
 
-do not provide a way for users to input only coordinates. This project aims to fill that gap by allowing users to either:
-- Extract coordinates from their phone's image metadata, or
-- Manually enter coordinates in two supported formats:
+
+This project aims to fill that gap by allowing users to either:
+- Extract coordinates from their phone's image metadata in either format:
   - **Degrees, Minutes, Seconds (DMS):** e.g., `39°08'24.9"N 120°14'06.0"W`
   - **Decimal Degrees:** e.g., `39.166175, -120.155778`
+- Or Manually pick coordinates on the map
 
 ## Features
 
