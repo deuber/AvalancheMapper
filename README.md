@@ -17,6 +17,42 @@ This project aims to fill that gap by allowing users to either:
   - **Decimal Degrees:** e.g., `39.166175, -120.155778`
 - Or Manually pick coordinates on the map
 
+## How to Start the Project
+
+### Prerequisites
+
+Make sure you have the following installed on your system:
+- [Node.js](https://nodejs.org/) (v16 or later)
+- [npm](https://www.npmjs.com/) (comes with Node.js)
+
+### Steps to Set Up and Run the Project
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/deuber/AvalancheMapper.git
+   cd AvalancheMapper
+   npm install
+
+2. **Create .env file **:
+
+Create the .env File: In the root of the project directory, create a file named .env and add the following content:
+
+GOOGLE_API_MAPS_KEY=your-google-maps-api-key
+
+Replace your-google-maps-api-key with your actual Google Maps API key. You can get your key from the Google Cloud Console.
+
+3. **Start the Server **:
+
+node server.js
+
+4. **Access the Application **:
+Access the Application: Open your browser and navigate to:
+
+http://localhost:3000
+
+
+The application should now be running locally, allowing you to enter and visualize avalanche locations.
+
 ## Features
 
 - **Coordinate Input Flexibility**: Users can drag and drop a marker on the map or manually enter coordinates in either DMS or Decimal Degrees format.
