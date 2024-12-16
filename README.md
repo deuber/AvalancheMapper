@@ -7,7 +7,7 @@ AvalancheMapper
 Demo
 ----
 
-![Demo Screenshot](https://github.com/deuber/AvalancheMapper/blob/main/mockup3.png)
+![Demo Screenshot](https://github.com/deuber/AvalancheMapper/blob/main/mockup4.png)
 
 Why I Created This Project
 --------------------------
@@ -83,6 +83,8 @@ How It Works
     *   Ensure the photo was taken with location services enabled so the GPS data is included.
         
     *   The tool extracts the location metadata and updates the map picker.
+
+    ![Demo Screenshot](https://github.com/deuber/AvalancheMapper/blob/main/mockup3.png)
         
 2.  **Enter Coordinates Manually**:
     
