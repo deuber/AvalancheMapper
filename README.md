@@ -54,11 +54,11 @@ cd AvalancheMapper
 
 npm install
     
-2.  In the root of the project directory, create a file named .env and add the following content:  codeGOOGLE\_API\_MAPS\_KEY=your-google-maps-api-keyReplace your-google-maps-api-key with your actual Google Maps API key. You can get your key from the [Google Cloud Console](https://console.cloud.google.com/).
+2.  In the root of the project directory, create a file named .env and add the following content:GOOGLE\_API\_MAPS\_KEY=your-google-maps-api-keyReplace your-google-maps-api-key with your actual Google Maps API key. You can get your key from the [Google Cloud Console](https://console.cloud.google.com/).
     
 3.  Run the server with the following command:   server.js
     
-4.  Open your browser and navigate to:arduinoCopy codehttp://localhost:3000 The application should now be running locally, allowing you to enter and visualize avalanche locations.
+4.  Open your browser and navigate to: http://localhost:3000 The application should now be running locally, allowing you to enter and visualize avalanche locations.
     
 
 Features
