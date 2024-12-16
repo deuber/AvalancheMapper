@@ -6,7 +6,7 @@ AvalancheMapper
 Why I Created This Project
 --------------------------
 
-As an avid backcountry skier, I often contribute avalanche observations to organizations like the **Sierra Avalanche Center** and **Utah Avalanche Center**. I noticed that manually entering avalanche locations can be error-prone. However, I realized I could extract accurate location coordinates directly from my phone's metadata for the image taken of the avalanche site. This inspired me to create AvalancheMapper, which ensures that location data submitted is both precise and easy to input.
+As an avid backcountry skier, I sometimes contribute avalanche observations to organizations like the **Sierra Avalanche Center** and **Utah Avalanche Center**. I noticed that manually entering avalanche locations can be error-prone. However, I realized I could extract accurate location coordinates directly from my phone's metadata for the image taken of the avalanche site. This inspired me to create AvalancheMapper, which ensures that location data submitted is both precise and easy to input.
 
 Currently, platforms below do not provide a way for users to input only coordinates:
 
@@ -42,13 +42,13 @@ Ensure you have the following installed on your system:
 
 ### Steps to Set Up and Run the Project
 
-1.  bashCopy codegit clone https://github.com/deuber/AvalancheMapper.gitcd AvalancheMappernpm install
+1.  clone https://github.com/deuber/AvalancheMapper.gitcd AvalancheMappernpm install
     
-2.  In the root of the project directory, create a file named .env and add the following content:bashCopy codeGOOGLE\_API\_MAPS\_KEY=your-google-maps-api-keyReplace your-google-maps-api-key with your actual Google Maps API key. You can get your key from the [Google Cloud Console](https://console.cloud.google.com/).
+2.  In the root of the project directory, create a file named .env and add the following content:  codeGOOGLE\_API\_MAPS\_KEY=your-google-maps-api-keyReplace your-google-maps-api-key with your actual Google Maps API key. You can get your key from the [Google Cloud Console](https://console.cloud.google.com/).
     
-3.  Run the server with the following command:bashCopy codenode server.js
+3.  Run the server with the following command:   server.js
     
-4.  Open your browser and navigate to:arduinoCopy codehttp://localhost:3000The application should now be running locally, allowing you to enter and visualize avalanche locations.
+4.  Open your browser and navigate to:arduinoCopy codehttp://localhost:3000 The application should now be running locally, allowing you to enter and visualize avalanche locations.
     
 
 Features
@@ -95,6 +95,8 @@ How It Works
 
 Demo
 ----
+
+![Demo Screenshot](https://github.com/deuber/AvalancheMapper/blob/main/mockup.png)
 
 Use Cases
 ---------
