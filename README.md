@@ -48,7 +48,11 @@ Ensure you have the following installed on your system:
 
 ### Steps to Set Up and Run the Project
 
-1.  clone https://github.com/deuber/AvalancheMapper.gitcd AvalancheMappernpm install
+1.  clone https://github.com/deuber/AvalancheMapper.git
+
+cd AvalancheMapper
+
+npm install
     
 2.  In the root of the project directory, create a file named .env and add the following content:  codeGOOGLE\_API\_MAPS\_KEY=your-google-maps-api-keyReplace your-google-maps-api-key with your actual Google Maps API key. You can get your key from the [Google Cloud Console](https://console.cloud.google.com/).
     
