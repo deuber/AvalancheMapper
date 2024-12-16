@@ -3,6 +3,12 @@ AvalancheMapper
 
 **AvalancheMapper** is a simple and efficient tool designed to help backcountry skiers and avalanche forecasters accurately record avalanche observation locations by reducing errors in coordinate entry.
 
+
+Demo
+----
+
+![Demo Screenshot](https://github.com/deuber/AvalancheMapper/blob/main/mockup2.png)
+
 Why I Created This Project
 --------------------------
 
@@ -93,10 +99,6 @@ How It Works
     *   The uploaded image will display as a thumbnail for user confirmation.
         
 
-Demo
-----
-
-![Demo Screenshot](https://github.com/deuber/AvalancheMapper/blob/main/mockup2.png)
 
 Use Cases
 ---------
