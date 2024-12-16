@@ -4,7 +4,7 @@ const path = require('path');
 
 const app = express();
 
-// Serve the static files in the current directory
+// Serve static files (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname)));
 
 // Serve the HTML file for the root path

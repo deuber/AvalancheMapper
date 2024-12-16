@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Location Information</title>
+    <title>Avalanche Location Mapper</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script> <!-- EXIF.js added -->
     <style>
         #map {
             height: 500px;
@@ -15,29 +16,52 @@
         button {
             margin-top: 10px;
         }
+        .instructions {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #0078D7;
+        }
     </style>
 </head>
 <body>
+
     <div class="form-container">
-        <h1>Location Information</h1>
-        <p>
-            If you have enabled location on your phone, paste the coordinates found from your phone's metadata where you took the picture of the avalanche. 
-            OR you can manually enter the coordinates or use the map below to pick a location.
-        </p>
-        <p>
-            The coordinates can be entered in one of the following formats:
-        </p>
+        <h1>Avalanche Location Mapper</h1>
+
+        <!-- Instructions Section -->
+        <div class="instructions">
+            <p><strong>How to Use:</strong></p>
+            <ol>
+                <li>Upload an image (JPG or PNG) of the avalanche to automatically extract its location from the photo's GPS metadata.</li>
+                <li>If the image does not contain GPS data, manually move the picker on the map to where you think the avalanche occurred.</li>
+                <li>Alternatively, paste the exact coordinates (in DMS or Decimal Degrees format) in the field below to update the picker.</li>
+            </ol>
+        </div>
+
+        <!-- Image Upload Section -->
+        <form>
+            <label for="image-upload"><strong>Step 1: Upload Image</strong></label>
+            <input type="file" id="image-upload" accept="image/jpeg,image/png"> <!-- HEIC removed -->
+            <p id="image-feedback"></p>
+        </form>
+
+        <!-- Map Section -->
+        <h2>Step 2: Use the Map</h2>
+        <p>Adjust the marker below to pinpoint the avalanche location. The coordinates will update automatically.</p>
+        <div id="map"></div>
+
+        <!-- Coordinate Input Section -->
+        <h2>Step 3: Enter Coordinates (Optional)</h2>
+        <p>If you know the coordinates of the avalanche, you can enter them in one of the following formats:</p>
         <ul>
             <li><b>Degrees, Minutes, Seconds (DMS):</b> For example, <code>39°08'24.9"N 120°14'06.0"W</code></li>
             <li><b>Decimal Degrees:</b> For example, <code>39.166175, -120.155778</code></li>
         </ul>
-        <p>Both formats are supported, and the map will update accordingly.</p>
         <form>
             <label for="coordinates">Coordinates:</label>
             <input type="text" id="coordinates" name="coordinates" placeholder='e.g., "39°08\'24.9\"N 120°14\'06.0\"W" or "39.166175, -120.155778"'>
             <button type="button" id="update-marker">Update Marker</button>
-            <p>You can manually enter the coordinates or use the map below to pick a location.</p>
-            <div id="map"></div>
         </form>
     </div>
 
@@ -53,95 +77,107 @@
 
             // Dynamically load Google Maps script
             const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&callback=loadMap`;
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&callback=loadMap&v=weekly&libraries=marker`;
             script.async = true;
+            script.defer = true;
             document.head.appendChild(script);
         }
 
         function loadMap() {
-            // Center the map at Tahoe City, CA
             const tahoeCity = { lat: 39.1707, lng: -120.1405 };
+
             map = new google.maps.Map(document.getElementById('map'), {
                 center: tahoeCity,
-                zoom: 10
+                zoom: 10,
+                mapId: 'YOUR_MAP_ID_HERE' // Replace with your valid Map ID
             });
 
-            // Add a draggable marker
             marker = new google.maps.Marker({
                 position: tahoeCity,
                 map: map,
-                draggable: true,
+                draggable: true, // Allow marker to be dragged
                 title: "Drag me to select a location"
             });
 
-            // Update coordinates input field on marker drag
             marker.addListener('dragend', () => {
                 const position = marker.getPosition();
                 document.getElementById('coordinates').value =
                     `${position.lat().toFixed(6)}, ${position.lng().toFixed(6)}`;
             });
 
-            // Handle manual coordinates input
-            document.getElementById('update-marker').addEventListener('click', () => {
-                const input = document.getElementById('coordinates').value.trim();
+            // Handle manual coordinate input
+            document.getElementById('update-marker').addEventListener('click', updateMarkerFromInput);
 
-                if (input) {
-                    try {
-                        const { lat, lng } = parseCoordinates(input);
+            // Handle image upload for GPS metadata
+            document.getElementById('image-upload').addEventListener('change', handleImageUpload);
+        }
 
-                        const newLatLng = { lat: lat, lng: lng };
-
-                        // Update marker position
-                        marker.setPosition(newLatLng);
-
-                        // Center map on new coordinates
-                        map.setCenter(newLatLng);
-                    } catch (error) {
-                        alert("Invalid coordinates format. Please use '39.166175, -120.155778' or '39°08'24.9\"N 120°14'06.0\"W'.");
-                    }
+        function updateMarkerFromInput() {
+            const input = document.getElementById('coordinates').value.trim();
+            if (input) {
+                try {
+                    const { lat, lng } = parseCoordinates(input);
+                    const newLatLng = { lat: lat, lng: lng };
+                    marker.setPosition(newLatLng);
+                    map.setCenter(newLatLng);
+                } catch (error) {
+                    alert("Invalid coordinate format. Use '39.166175, -120.155778' or '39°08'24.9\"N 120°14'06.0\"W'.");
                 }
-            });
+            }
         }
 
         function parseCoordinates(input) {
-            // Match DMS format: 39°08'24.9"N 120°14'06.0"W
             const dmsRegex = /(\d+)[°](\d+)'(\d+(?:\.\d+)?)["]?([N|S])?\s*(\d+)[°](\d+)'(\d+(?:\.\d+)?)["]?([E|W])?/i;
-
             if (dmsRegex.test(input)) {
                 const matches = input.match(dmsRegex);
-
-                const latDegrees = parseFloat(matches[1]);
-                const latMinutes = parseFloat(matches[2]);
-                const latSeconds = parseFloat(matches[3]);
-                const latDirection = matches[4];
-
-                const lngDegrees = parseFloat(matches[5]);
-                const lngMinutes = parseFloat(matches[6]);
-                const lngSeconds = parseFloat(matches[7]);
-                const lngDirection = matches[8];
-
-                const lat = (latDegrees + latMinutes / 60 + latSeconds / 3600) * (latDirection === "S" ? -1 : 1);
-                const lng = (lngDegrees + lngMinutes / 60 + lngSeconds / 3600) * (lngDirection === "W" ? -1 : 1);
-
+                const lat = convertDMS(matches[1], matches[2], matches[3], matches[4]);
+                const lng = convertDMS(matches[5], matches[6], matches[7], matches[8]);
                 return { lat, lng };
             }
 
-            // Match Decimal Degrees format: 39.166175, -120.155778
             const decimalRegex = /^([-+]?[0-9]*\.?[0-9]+),\s*([-+]?[0-9]*\.?[0-9]+)$/;
-
             if (decimalRegex.test(input)) {
                 const matches = input.match(decimalRegex);
-
-                const lat = parseFloat(matches[1]);
-                const lng = parseFloat(matches[2]);
-
-                return { lat, lng };
+                return { lat: parseFloat(matches[1]), lng: parseFloat(matches[2]) };
             }
 
-            throw new Error("Invalid coordinate format");
+            throw new Error("Invalid format");
         }
 
-        // Initialize the map
+        function convertDMS(degrees, minutes, seconds, direction) {
+            let dd = parseFloat(degrees) + parseFloat(minutes) / 60 + parseFloat(seconds) / 3600;
+            if (direction === "S" || direction === "W") dd *= -1;
+            return dd;
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    EXIF.getData(file, function () {
+                        const lat = EXIF.getTag(this, "GPSLatitude");
+                        const latRef = EXIF.getTag(this, "GPSLatitudeRef");
+                        const lng = EXIF.getTag(this, "GPSLongitude");
+                        const lngRef = EXIF.getTag(this, "GPSLongitudeRef");
+
+                        if (lat && lng) {
+                            const latitude = convertDMS(lat[0], lat[1], lat[2], latRef);
+                            const longitude = convertDMS(lng[0], lng[1], lng[2], lngRef);
+                            document.getElementById('coordinates').value = `${latitude}, ${longitude}`;
+                            const newLatLng = { lat: latitude, lng: longitude };
+                            marker.setPosition(newLatLng);
+                            map.setCenter(newLatLng);
+                            document.getElementById('image-feedback').innerText = "Coordinates extracted successfully!";
+                        } else {
+                            document.getElementById('image-feedback').innerText = "No GPS data found in this image.";
+                        }
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
         initMap();
     </script>
 </body>
