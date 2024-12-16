@@ -93,10 +93,11 @@
         function loadMap() {
             const tahoeCity = { lat: 39.1707, lng: -120.1405 };
 
+            // Initialize the map with terrain map type
             map = new google.maps.Map(document.getElementById('map'), {
                 center: tahoeCity,
                 zoom: 10,
-                mapId: 'YOUR_MAP_ID_HERE' // Replace with your valid Map ID
+                mapTypeId: 'terrain', // Use Terrain map type for elevation details
             });
 
             marker = new google.maps.Marker({
@@ -118,6 +119,7 @@
             // Handle image upload for GPS metadata
             document.getElementById('image-upload').addEventListener('change', handleImageUpload);
         }
+
 
         function updateMarkerFromInput() {
             const input = document.getElementById('coordinates').value.trim();
@@ -157,39 +159,46 @@
             return dd;
         }
 
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    // Display the image thumbnail
-                    const thumbnail = document.getElementById('image-thumbnail');
-                    thumbnail.src = e.target.result;
-                    thumbnail.style.display = 'block';
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            // Display the image thumbnail
+            const thumbnail = document.getElementById('image-thumbnail');
+            thumbnail.src = e.target.result;
+            thumbnail.style.display = 'block';
 
-                    // Extract EXIF metadata
-                    EXIF.getData(file, function () {
-                        const lat = EXIF.getTag(this, "GPSLatitude");
-                        const latRef = EXIF.getTag(this, "GPSLatitudeRef");
-                        const lng = EXIF.getTag(this, "GPSLongitude");
-                        const lngRef = EXIF.getTag(this, "GPSLongitudeRef");
+            // Extract EXIF metadata
+            EXIF.getData(file, function () {
+                const lat = EXIF.getTag(this, "GPSLatitude");
+                const latRef = EXIF.getTag(this, "GPSLatitudeRef");
+                const lng = EXIF.getTag(this, "GPSLongitude");
+                const lngRef = EXIF.getTag(this, "GPSLongitudeRef");
 
-                        if (lat && lng) {
-                            const latitude = convertDMS(lat[0], lat[1], lat[2], latRef);
-                            const longitude = convertDMS(lng[0], lng[1], lng[2], lngRef);
-                            document.getElementById('coordinates').value = `${latitude}, ${longitude}`;
-                            const newLatLng = { lat: latitude, lng: longitude };
-                            marker.setPosition(newLatLng);
-                            map.setCenter(newLatLng);
-                            document.getElementById('image-feedback').innerText = "Coordinates extracted successfully!";
-                        } else {
-                            document.getElementById('image-feedback').innerText = "No GPS data found in this image.";
-                        }
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-        }
+                if (lat && lng) {
+                    const latitude = convertDMS(lat[0], lat[1], lat[2], latRef);
+                    const longitude = convertDMS(lng[0], lng[1], lng[2], lngRef);
+
+                    // Update the coordinates field
+                    document.getElementById('coordinates').value = `${latitude}, ${longitude}`;
+
+                    // Move the marker to the new position
+                    const newLatLng = { lat: latitude, lng: longitude };
+                    marker.setPosition(newLatLng);
+                    map.setCenter(newLatLng);
+                    map.setZoom(15); // Automatically zoom in to level 15
+
+                    document.getElementById('image-feedback').innerText = "Coordinates extracted successfully!";
+                } else {
+                    document.getElementById('image-feedback').innerText = "No GPS data found in this image.";
+                }
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
 
         initMap();
     </script>
