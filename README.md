@@ -96,7 +96,7 @@ How It Works
 Demo
 ----
 
-![Demo Screenshot](https://github.com/deuber/AvalancheMapper/blob/main/mockup.png)
+![Demo Screenshot](https://github.com/deuber/AvalancheMapper/blob/main/mockup2.png)
 
 Use Cases
 ---------
