@@ -7,7 +7,7 @@ AvalancheMapper
 Demo
 ----
 
-![Demo Screenshot](https://github.com/deuber/AvalancheMapper/blob/main/mockup2.png)
+![Demo Screenshot](https://github.com/deuber/AvalancheMapper/blob/main/mockup3.png)
 
 Why I Created This Project
 --------------------------
