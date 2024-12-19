@@ -7,7 +7,7 @@ AvalancheMapper
 Demo
 ----
 
-I created a new Web Service on **Render** that connects to this GitHub repository:
+I created a new free Slow loading Web Service on **Render** that connects to this GitHub repository:
 
 https://avalanchemapper.onrender.com/
 
